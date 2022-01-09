@@ -19,6 +19,7 @@ parser.add_argument("--n-envs", help="number of environments", default=1, type=i
 parser.add_argument("--verbose", help="Verbose mode (0: no output, 1: INFO)", default=1, type=int)
 parser.add_argument("--seed", help="Random generator seed", type=int, default=0)
 parser.add_argument("--test-mode", action="store_true", default=False, help="Do only one experiment (useful for testing)")
+parser.add_argument("--with-mujoco", action="store_true", default=False, help="Run also MuJoCo envs")
 parser.add_argument("--num-threads", help="Number of threads for PyTorch", default=2, type=int)
 args = parser.parse_args()
 
@@ -38,15 +39,14 @@ for idx, trained_model in enumerate(trained_models.keys()):  # noqa: C901
     algo, env_id = trained_models[trained_model]
     n_envs = args.n_envs
     n_timesteps = args.n_timesteps
-    if algo in ["dqn", "qrdqn", "ddpg", "sac", "td3", "tqc", "her"]:
+
+    # HER is now a replay buffer class
+    if algo == "her":
+        continue
+
+    if algo in ["dqn", "qrdqn", "ddpg", "sac", "td3", "tqc"]:
         n_envs = 1
         n_timesteps *= args.n_envs
-
-    # Comment out to benchmark HER robotics env
-    # this requires a mujoco licence
-    if "Fetch" in env_id:
-        print(f"Skipping mujoco env: {env_id}")
-        continue
 
     reward_log = os.path.join(args.benchmark_dir, trained_model)
     arguments = [
@@ -81,6 +81,13 @@ for idx, trained_model in enumerate(trained_models.keys()):  # noqa: C901
             skip_eval = len(x) > 0
         except (json.JSONDecodeError, pd.errors.EmptyDataError, TypeError):
             pass
+
+    # Comment out to benchmark HER robotics env
+    # this requires a mujoco licence
+    if "Fetch" in env_id and not args.with_mujoco:
+        print(f"Skipping mujoco env: {env_id}")
+        if not skip_eval:
+            continue
 
     if skip_eval:
         print("Skipping eval...")

@@ -27,7 +27,7 @@ def test_trained_agents(trained_model):
         return
 
     # Skip mujoco envs
-    if "Fetch" in trained_model:
+    if "Fetch" in trained_model or "-v3" in trained_model:
         return
 
     if "-MiniGrid-" in trained_model:
@@ -73,6 +73,10 @@ def test_load(tmp_path):
 
     # Load checkpoint
     return_code = subprocess.call(["python", "enjoy.py"] + args + ["--load-checkpoint", str(500)])
+    _assert_eq(return_code, 0)
+
+    # Load last checkpoint
+    return_code = subprocess.call(["python", "enjoy.py"] + args + ["--load-last-checkpoint"])
     _assert_eq(return_code, 0)
 
 

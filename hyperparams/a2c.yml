@@ -38,7 +38,7 @@ Acrobot-v1:
   policy: 'MlpPolicy'
   ent_coef: .0
 
-# Almost tuned
+# Tuned
 Pendulum-v0:
   normalize: True
   n_envs: 8
@@ -49,7 +49,7 @@ Pendulum-v0:
   n_steps: 8
   gae_lambda: 0.9
   vf_coef: 0.4
-  gamma: 0.99
+  gamma: 0.9
   use_rms_prop: True
   normalize_advantage: False
   learning_rate: lin_7e-4
@@ -123,8 +123,7 @@ BipedalWalkerHardcore-v3:
   policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
 
 # Tuned
-HalfCheetahBulletEnv-v0:
-  env_wrapper: sb3_contrib.common.wrappers.TimeFeatureWrapper
+HalfCheetahBulletEnv-v0: &pybullet-defaults
   normalize: true
   n_envs: 4
   n_timesteps: !!float 2e6
@@ -141,95 +140,45 @@ HalfCheetahBulletEnv-v0:
   learning_rate: lin_0.00096
   # learning_rate: !!float 3e-4
   use_sde: True
-  policy_kwargs: "dict(log_std_init=-2, ortho_init=False, full_std=True)"
-
-Walker2DBulletEnv-v0:
-  env_wrapper: sb3_contrib.common.wrappers.TimeFeatureWrapper
-  normalize: true
-  n_envs: 4
-  n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  ent_coef: 0.0
-  max_grad_norm: 0.5
-  n_steps: 8
-  gae_lambda: 0.9
-  vf_coef: 0.4
-  gamma: 0.99
-  use_rms_prop: True
-  normalize_advantage: False
-  learning_rate: lin_0.00096
-  use_sde: True
   policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
 
-# normalize: true
-# n_envs: 4
-# n_timesteps: !!float 2e6
-# policy: 'MlpPolicy'
-# ent_coef: 0.0
-# max_grad_norm: 0.5
-# n_steps: 32
-# gae_lambda: 0.9
-# vf_coef: 0.4
-# gamma: 0.99
-# use_rms_prop: True
-# normalize_advantage: False
-# learning_rate: 0.0002
-# use_sde: True
-# policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
+Walker2DBulletEnv-v0:
+  <<: *pybullet-defaults
 
 # Tuned
 AntBulletEnv-v0:
-  normalize: true
-  n_envs: 4
-  n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  ent_coef: 0.0
-  max_grad_norm: 0.5
-  n_steps: 8
-  gae_lambda: 0.9
-  vf_coef: 0.4
-  gamma: 0.99
-  use_rms_prop: True
-  normalize_advantage: False
-  learning_rate: lin_0.00096
-  use_sde: True
-  policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
+  <<: *pybullet-defaults
 
 # Tuned
 HopperBulletEnv-v0:
-  env_wrapper: sb3_contrib.common.wrappers.TimeFeatureWrapper
-  normalize: true
-  n_envs: 4
-  n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  ent_coef: 0.0
-  max_grad_norm: 0.5
-  n_steps: 8
-  gae_lambda: 0.9
-  vf_coef: 0.4
-  gamma: 0.99
-  use_rms_prop: True
-  normalize_advantage: False
-  learning_rate: lin_0.00096
-  use_sde: True
-  policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
+  <<: *pybullet-defaults
 
 # Tuned but unstable
 # Not working without SDE?
 ReacherBulletEnv-v0:
-  env_wrapper: sb3_contrib.common.wrappers.TimeFeatureWrapper
-  normalize: true
-  n_envs: 4
-  n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  ent_coef: 0.0
-  max_grad_norm: 0.5
-  n_steps: 8
-  gae_lambda: 0.9
-  vf_coef: 0.4
-  gamma: 0.99
-  use_rms_prop: True
-  normalize_advantage: False
+  <<: *pybullet-defaults
   learning_rate: lin_0.0008
-  use_sde: True
-  policy_kwargs: "dict(log_std_init=-2, ortho_init=False)"
+
+# === Mujoco Envs ===
+
+HalfCheetah-v3: &mujoco-defaults
+  normalize: true
+  n_timesteps: !!float 1e6
+  policy: 'MlpPolicy'
+
+Ant-v3:
+  <<: *mujoco-defaults
+
+Hopper-v3:
+  <<: *mujoco-defaults
+
+Walker2d-v3:
+  <<: *mujoco-defaults
+
+Humanoid-v3:
+  <<: *mujoco-defaults
+  n_timesteps: !!float 2e6
+
+Swimmer-v3:
+  <<: *mujoco-defaults
+  gamma: 0.9999
