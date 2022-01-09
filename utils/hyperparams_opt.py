@@ -228,9 +228,9 @@ def sample_td3_params(trial: optuna.Trial) -> Dict[str, Any]:
     # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
 
     net_arch = {
-        "small": [64, 64],
-        "medium": [256, 256],
-        "big": [400, 300],
+        "small": [16, 16],
+        "medium": [32, 32],
+        "big": [64, 64],
         # Uncomment for tuning HER
         # "verybig": [256, 256, 256],
     }[net_arch]
