@@ -6,6 +6,8 @@ from copy import deepcopy
 import numpy as np
 import pytablewriter
 import seaborn
+#import matplotlib
+#matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 from scipy.spatial import distance_matrix
 
@@ -242,3 +244,4 @@ if args.output is not None:
 
 if not args.no_display:
     plt.show()
+    plt.savefig("all_plots.png")

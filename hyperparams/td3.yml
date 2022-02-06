@@ -128,6 +128,19 @@ happinize-v0:
   n_timesteps: 30000
   policy: 'MlpPolicy'
 
+happinize-v1:
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  noise_type: 'normal'
+  noise_std: 0.1
+  train_freq: 32
+  tau: 0.02
+  policy_kwargs: "dict(net_arch=[64, 64])"
+  gamma: 0.995
+  batch_size: 512 #128
+  buffer_size: 1000000
+  learning_rate: 0.004
+
 # === Mujoco Envs ===
 
 HalfCheetah-v3: &mujoco-defaults
